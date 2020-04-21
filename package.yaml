@@ -3,7 +3,7 @@ version:             0.1.0.0
 github:              "kayhide/wakame"
 license:             BSD3
 author:              "Hideaki Kawai"
-maintainer:          "kawaihide@gmail.com"
+maintainer:          "kayhide@gmail.com"
 copyright:           "2020 Hideaki Kawai"
 synopsis:            Functions to manipulate records
 category:            Data, Records, Generics
