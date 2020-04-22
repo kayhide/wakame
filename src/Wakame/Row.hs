@@ -25,6 +25,11 @@ class Row f where
   toRec :: f a -> Rec (RowTy f)
   fromRec :: Rec (RowTy f) -> f a
 
+instance Row U1 where
+  type RowTy U1 = '[]
+  toRec = const RNil
+  fromRec = const U1
+
 instance Row f => Row (D1 i f) where
   type RowTy (D1 i f) = RowTy f
   toRec (M1 x) = toRec x
