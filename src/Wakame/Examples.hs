@@ -81,6 +81,10 @@ pt = Point 1.2 8.3
 -- >>> f $ toRec $ from $ Point3d 3.5 4.3 1.6
 -- Point {x = 3.5, y = 4.3}
 --
+-- Returns fully default value when `()` is given.
+-- >>> f $ toRec $ from ()
+-- Point {x = 0.0, y = 0.0}
+--
 -- Works nicely with data whose fields order is not the same.
 -- >>> f $ toRec $ from $ Tniop 4.3 3.5
 -- Point {x = 3.5, y = 4.3}
