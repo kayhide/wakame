@@ -3,16 +3,16 @@ module Wakame.Examples where
 
 import Prelude
 
-import Control.Arrow ((***), first)
+import Control.Arrow (first, (***))
 import Data.Kind
 import Data.Proxy
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.Rec
-import Wakame.Utils
-import Wakame.Union
+import Wakame.IsRec
 import Wakame.Nub
-import Wakame.Row
+import Wakame.Rec
+import Wakame.Union
+import Wakame.Utils
 
 
 -- * Data types which is used in this Wakame.Examples module
@@ -97,4 +97,4 @@ f props = to $ fromRec $ nub $ union props def
     def :: Rec PointRow
     def = toRec $ from $ Point 0.0 0.0
 
-type PointRow = RowTy (Rep Point)
+type PointRow = RecType (Rep Point)

@@ -51,12 +51,12 @@ instance Generic (Keyed k a) where
 
 -- * Heterogeneous associated list
 
-data Rec (row :: [FIELD]) where
+data Rec (as :: [FIELD]) where
   RNil :: Rec '[]
-  RCons :: Keyed k a -> Rec xs -> Rec ('(k, a) ': xs)
+  RCons :: Keyed k a -> Rec as -> Rec ('(k, a) ': as)
 
 instance Show (Rec '[]) where
   show _ = "_"
 
-instance (KnownSymbol k, Show a, Show (Rec xs)) => Show (Rec ('(k, a) ': xs)) where
+instance (KnownSymbol k, Show a, Show (Rec as)) => Show (Rec ('(k, a) ': as)) where
   show (RCons x xs) = show x <> ", " <> show xs
