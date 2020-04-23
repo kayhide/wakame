@@ -1,77 +1,92 @@
-name:                wakame
-version:             0.1.0.0
-github:              "kayhide/wakame"
-license:             BSD3
-author:              "Hideaki Kawai"
-maintainer:          "kawaihide@gmail.com"
-copyright:           "2020 Hideaki Kawai"
-synopsis:            Functions to manipulate records
-category:            Data, Records, Generics
+name: wakame
+version: 0.1.0.0
+github: kayhide/wakame
+license: BSD3
+author: Hideaki Kawai
+maintainer: kawaihide@gmail.com
+copyright: 2020 Hideaki Kawai
+synopsis: Functions to manipulate records
+category: Generics, Records
 
 extra-source-files:
-- README.md
-- ChangeLog.md
+  - README.md
+  - ChangeLog.md
 
 
-description:         Please see the README on GitHub at <https://github.com/kayhide/wakame>
+description: Please see the README on GitHub at <https://github.com/kayhide/wakame>
 
 dependencies:
-- base >= 4.7 && < 5
+  - base
 
 default-extensions:
-- AutoDeriveTypeable
-- BangPatterns
-- BinaryLiterals
-- ConstraintKinds
-- DataKinds
-- DefaultSignatures
-- DeriveAnyClass
-- DeriveDataTypeable
-- DeriveFoldable
-- DeriveFunctor
-- DeriveGeneric
-- DeriveTraversable
-- DoAndIfThenElse
-- EmptyDataDecls
-- ExistentialQuantification
-- FlexibleContexts
-- FlexibleInstances
-- FunctionalDependencies
-- GADTs
-- GeneralizedNewtypeDeriving
-- InstanceSigs
-- KindSignatures
-- LambdaCase
-- MultiParamTypeClasses
-- MultiWayIf
-- NamedFieldPuns
-- OverloadedLists
-- OverloadedStrings
-- PartialTypeSignatures
-- PatternGuards
-- PolyKinds
-- RankNTypes
-- RecordWildCards
-- ScopedTypeVariables
-- StandaloneDeriving
-- TupleSections
-- TypeApplications
-- TypeFamilies
-- TypeOperators
-- TypeSynonymInstances
-- ViewPatterns
+  - AutoDeriveTypeable
+  - BangPatterns
+  - BinaryLiterals
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DeriveDataTypeable
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DoAndIfThenElse
+  - EmptyDataDecls
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - OverloadedLists
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternGuards
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeOperators
+  - TypeSynonymInstances
+  - ViewPatterns
 
 library:
   source-dirs: src
 
 tests:
   wakame-doctest:
-    main:                Main.hs
-    source-dirs:         test/doctest
+    main: Main.hs
+    source-dirs: test/doctest
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - doctest
-    - wakame
+      - doctest
+      - wakame
+
+  wakame-tasty:
+    main: Main.hs
+    source-dirs: test/tasty
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - QuickCheck
+      - tasty
+      - tasty-discover
+      - tasty-hspec
+      - tasty-quickcheck
+      - wakame

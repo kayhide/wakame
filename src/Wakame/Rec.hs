@@ -55,6 +55,12 @@ data Rec (as :: [FIELD]) where
   RNil :: Rec '[]
   RCons :: Keyed k a -> Rec as -> Rec ('(k, a) ': as)
 
+instance Eq (Rec '[]) where
+  (==) _ _ = True
+
+instance (KnownSymbol k, Eq a, Eq (Rec as)) => Eq (Rec ('(k, a) ': as)) where
+  (==) (RCons x xs) (RCons y ys) = x == y && xs == ys
+
 instance Show (Rec '[]) where
   show _ = "_"
 

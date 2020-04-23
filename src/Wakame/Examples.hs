@@ -18,16 +18,16 @@ import Wakame.Utils
 -- * Data types which is used in this Wakame.Examples module
 
 data Point = Point { x :: Double, y :: Double }
-  deriving (Show, Generic)
+  deriving (Eq, Show, Generic)
 
 data Position = Position { x :: !Double, y :: !Double }
-  deriving (Show, Generic)
+  deriving (Eq, Show, Generic)
 
 data Point3d = Point3d { x :: Double, y :: Double, z :: Double }
-  deriving (Show, Generic)
+  deriving (Eq, Show, Generic)
 
 data Tniop = Tniop { y :: Double, x :: Double }
-  deriving (Show, Generic)
+  deriving (Eq, Show, Generic)
 
 
 -- | An instance of @Point@ data type.
