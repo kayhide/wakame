@@ -27,7 +27,7 @@ type FIELD = (Symbol, Type)
 -- >>> (x, y)
 -- (x: 3.5,y: 4.8)
 --
--- >>> toRec $ from (x, y)
+-- >>> toRec (x, y)
 -- x: 3.5, y: 4.8, _
 --
 -- >>> keys x

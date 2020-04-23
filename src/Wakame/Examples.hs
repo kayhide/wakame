@@ -59,42 +59,42 @@ pt = Point 1.2 8.3
 -- * Examples of Record value manipulation
 
 -- | Round trip of Point to/from Rec
--- >>> to @Point $ fromRec $ toRec $ from pt
+-- >>> fromRec @Point $ toRec pt
 -- Point {x = 1.2, y = 8.3}
 
 -- | Converting Point to Point3d by adding z field
--- >>> to @Point3d $ fromRec $ union (toRec $ from pt) (toRec $ from (Keyed @"z" 42.0))
+-- >>> fromRec @Point3d $ union (toRec pt) (toRec (Keyed @"z" 42.0))
 -- Point3d {x = 1.2, y = 8.3, z = 42.0}
 
 
 -- | Interfacing optional fields
 --
 -- `f` fills absent fileds with `0.0`.
--- >>> f $ toRec $ from (Keyed @"x" 3.5)
+-- >>> f $ toRec (Keyed @"x" 3.5)
 -- Point {x = 3.5, y = 0.0}
 --
 -- Ignores extra fields.
--- >>> f $ toRec $ from (Keyed @"y" 4.3, Keyed @"z" 1.6)
+-- >>> f $ toRec (Keyed @"y" 4.3, Keyed @"z" 1.6)
 -- Point {x = 0.0, y = 4.3}
 --
 -- Converts from another data type.
--- >>> f $ toRec $ from $ Point3d 3.5 4.3 1.6
+-- >>> f $ toRec $ Point3d 3.5 4.3 1.6
 -- Point {x = 3.5, y = 4.3}
 --
 -- Returns fully default value when `()` is given.
--- >>> f $ toRec $ from ()
+-- >>> f $ toRec ()
 -- Point {x = 0.0, y = 0.0}
 --
 -- Works nicely with data whose fields order is not the same.
--- >>> f $ toRec $ from $ Tniop 4.3 3.5
+-- >>> f $ toRec $ Tniop 4.3 3.5
 -- Point {x = 3.5, y = 4.3}
 f ::
   ( Union props PointRow props'
   , Nub props' PointRow
   ) => Rec props -> Point
-f props = to $ fromRec $ nub $ union props def
+f props = fromRec $ nub $ union props def
   where
     def :: Rec PointRow
-    def = toRec $ from $ Point 0.0 0.0
+    def = toRec $ Point 0.0 0.0
 
 type PointRow = RecType (Rep Point)

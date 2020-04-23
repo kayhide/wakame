@@ -13,9 +13,9 @@ import Wakame.Rec (Keyed (..), Rec (..))
 -- * Nub typeclass
 
 -- |
--- >>> toRec $ from (Keyed @"x" 42.0, Keyed @"x" 56.4)
+-- >>> toRec (Keyed @"x" 42.0, Keyed @"x" 56.4)
 -- x: 42.0, x: 56.4, _
--- >>> nub $ toRec $ from (Keyed @"x" 42.0, Keyed @"x" 56.4) :: Rec '[ '("x", Double)]
+-- >>> nub $ toRec (Keyed @"x" 42.0, Keyed @"x" 56.4) :: Rec '[ '("x", Double)]
 -- x: 42.0, _
 class Nub s t where
   nub :: Rec s -> Rec t

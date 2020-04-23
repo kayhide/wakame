@@ -17,13 +17,13 @@ import Wakame.Rec (Rec (..))
 -- * Union typeclass
 
 -- |
--- >>> union (toRec $ from pt) (toRec $ from (Keyed @"z" 42.0))
+-- >>> union (toRec pt) (toRec (Keyed @"z" 42.0))
 -- x: 1.2, y: 8.3, z: 42.0, _
 
 -- |
--- >>> ununion (toRec $ from pt) :: (Rec '[ '("x", Double)], Rec '[ '("y", Double)])
+-- >>> ununion (toRec pt) :: (Rec '[ '("x", Double)], Rec '[ '("y", Double)])
 -- (x: 1.2, _,y: 8.3, _)
--- >>> ununion (toRec $ from pt) :: (Rec '[], Rec '[ '("x", Double), '("y", Double)])
+-- >>> ununion (toRec pt) :: (Rec '[], Rec '[ '("x", Double), '("y", Double)])
 -- (_,x: 1.2, y: 8.3, _)
 class Union l r u | l r -> u where
   union :: Rec l -> Rec r -> Rec u
