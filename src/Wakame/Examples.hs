@@ -8,11 +8,7 @@ import Data.Kind
 import Data.Proxy
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.IsRec
-import Wakame.Nub
-import Wakame.Rec
-import Wakame.Union
-import Wakame.Utils
+import Wakame
 
 
 -- * Data types which is used in this Wakame.Examples module

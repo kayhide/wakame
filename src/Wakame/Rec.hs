@@ -9,16 +9,12 @@ import GHC.TypeLits
 import Wakame.Utils (Append (..))
 
 
--- $setup
--- >>> import Wakame
-
-
+-- | Kind of field
 type FIELD = (Symbol, Type)
 
+-- * Data types
 
--- * Value tagged by @Symbol@
-
--- |
+-- | Value tagged by @Symbol@
 -- >>> x = Keyed @"x" @Double 3.5
 -- >>> y = Keyed @"y" @Double 4.8
 -- >>> :t RCons x (RCons y RNil)
@@ -27,16 +23,14 @@ type FIELD = (Symbol, Type)
 -- >>> (x, y)
 -- (x: 3.5,y: 4.8)
 --
--- >>> toRec (x, y)
--- x: 3.5, y: 4.8, _
---
+-- It works with @keys@ function.
+-- >>> import Wakame.Keys
 -- >>> keys x
 -- ["x"]
 --
 -- >>> keys (x, y)
 -- ["x","y"]
 --
-
 newtype Keyed (k :: Symbol) (a :: Type) = Keyed a
   deriving (Eq)
 
@@ -49,8 +43,7 @@ instance Generic (Keyed k a) where
   to (M1 (K1 x)) = Keyed x
 
 
--- * Heterogeneous associated list
-
+-- | Heterogeneous associated list
 data Rec (as :: [FIELD]) where
   RNil :: Rec '[]
   RCons :: Keyed k a -> Rec as -> Rec ('(k, a) ': as)
@@ -66,3 +59,37 @@ instance Show (Rec '[]) where
 
 instance (KnownSymbol k, Show a, Show (Rec as)) => Show (Rec ('(k, a) ': as)) where
   show (RCons x xs) = show x <> ", " <> show xs
+
+
+-- | Typeclass of converting to/from @Rec@
+class IsRec f where
+  type RecType f :: [FIELD]
+  fromRec' :: Rec (RecType f) -> f a
+  toRec' :: f a -> Rec (RecType f)
+
+
+-- * Functions to bypass generic reps
+
+-- |
+-- With Generic instances, a tuple of keyed values works.
+--
+-- >>> import Wakame.Generic ()
+-- >>> x = Keyed @"x" @Double 3.5
+-- >>> y = Keyed @"y" @Double 4.8
+--
+-- >>> fromRec (RCons x (RCons y RNil)) :: (Keyed "x" Double, Keyed "y" Double)
+-- (x: 3.5,y: 4.8)
+--
+-- >>> toRec (x, y)
+-- x: 3.5, y: 4.8, _
+fromRec ::
+  Generic a =>
+  IsRec (Rep a) =>
+  Rec (RecType (Rep a)) -> a
+fromRec = to . fromRec'
+
+toRec ::
+  Generic a =>
+  IsRec (Rep a) =>
+  a -> Rec (RecType (Rep a))
+toRec = toRec' . from
