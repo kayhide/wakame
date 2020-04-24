@@ -2,7 +2,7 @@ module Wakame
   ( module X
   ) where
 
-import Wakame.IsRec as X
+import Wakame.Generic ()
 import Wakame.Keys as X
 import Wakame.Nub as X
 import Wakame.Rec as X

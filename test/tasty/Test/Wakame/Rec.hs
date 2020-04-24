@@ -1,4 +1,4 @@
-module Test.Wakame.IsRec where
+module Test.Wakame.Rec where
 
 import GHC.Generics
 import Test.Tasty
@@ -6,8 +6,7 @@ import Test.Tasty.Hspec
 import Test.Tasty.QuickCheck
 import Test.Utils
 import Wakame.Examples (Point (..))
-import Wakame.IsRec (fromRec, toRec)
-import Wakame.Rec (Keyed (..), Rec (..))
+import Wakame.Rec (Keyed (..), Rec (..), fromRec, toRec)
 
 
 prop_toRec :: (Keyed "x" Double, Keyed "y" Double) -> Property

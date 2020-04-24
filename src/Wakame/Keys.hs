@@ -10,11 +10,9 @@ import GHC.TypeLits
 import Wakame.Rec (Keyed (..))
 
 
--- $setup
--- >>> import Wakame.Examples
-
-
 -- | Function to retrieve key values
+--
+-- >>> import Wakame.Examples
 -- >>> keys pt
 -- ["x","y"]
 --
@@ -22,24 +20,24 @@ import Wakame.Rec (Keyed (..))
 -- >>> import Data.Functor.Identity (Identity)
 -- >>> keys pt :: [Identity String]
 -- [Identity "x",Identity "y"]
-keys :: (IsString s, Generic a, Keys' (Rep a) s) => a -> [s]
+keys :: (IsString s, Generic a, Keys' s (Rep a)) => a -> [s]
 keys = keys' . from
 
 
-class IsString s => Keys' f s where
+class IsString s => Keys' s f where
   keys' :: f a -> [s]
 
-instance Keys' a s => Keys' (D1 f a) s where
+instance Keys' s a => Keys' s (D1 f a) where
   keys' (M1 x) = keys' x
 
-instance Keys' a s => Keys' (C1 f a) s where
+instance Keys' s a => Keys' s (C1 f a) where
   keys' (M1 x) = keys' x
 
-instance (Keys' a s, Keys' b s) => Keys' (a :*: b) s where
+instance (Keys' s a, Keys' s b) => Keys' s (a :*: b) where
   keys' (x :*: y) = keys' x <> keys' y
 
-instance (KnownSymbol key, IsString s) => Keys' (S1 ('MetaSel ('Just key) su ss ds) a) s where
+instance (IsString s, KnownSymbol key) => Keys' s (S1 ('MetaSel ('Just key) su ss ds) a) where
   keys' _ = [fromString $ symbolVal (Proxy @key)]
 
-instance (KnownSymbol key, IsString s) => Keys' (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (Keyed key a))) s where
+instance (IsString s, KnownSymbol key) => Keys' s (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (Keyed key a))) where
   keys' _ = [fromString $ symbolVal (Proxy @key)]

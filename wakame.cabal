@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 49d4ba21e0a39971e4465035e161a37de1e0d28784c3ef2c854c00e37454a865
+-- hash: 085f86be60d917ae683cefeb213c4b2ec0472e0e50c3728e9980473032c22f2a
 
 name:           wakame
 version:        0.1.0.0
@@ -31,7 +31,7 @@ library
   exposed-modules:
       Wakame
       Wakame.Examples
-      Wakame.IsRec
+      Wakame.Generic
       Wakame.Keys
       Wakame.Nub
       Wakame.Rec
@@ -66,7 +66,7 @@ test-suite wakame-tasty
   main-is: Main.hs
   other-modules:
       Test.Utils
-      Test.Wakame.IsRec
+      Test.Wakame.Rec
       Paths_wakame
   hs-source-dirs:
       test/tasty
