@@ -98,3 +98,38 @@ f props = fromRec $ nub $ union props def
     def = toRec $ Point 0.0 0.0
 
 type PointRow = RecType (Rep Point)
+
+
+-- | Filling common fields if existing
+--
+-- >>> g (Person "Luke" "1979-01-01") (Timestamp "2020-04-01" "2020-04-02") :: Person
+-- Person {name = "Luke", created_at = "2020-04-01"}
+--
+-- >>> g (Point 3.5 4.3) (Timestamp "2020-04-01" "2020-04-02") :: Point
+-- Point {x = 3.5, y = 4.3}
+
+data Timestamp =
+  Timestamp
+  { created_at :: String
+  , updated_at :: String
+  }
+  deriving (Eq, Show, Generic)
+
+data Person =
+  Person
+  { name :: String
+  , created_at :: String
+  }
+  deriving (Eq, Show, Generic)
+
+g ::
+  ( Union (RecType (Rep a2)) (RecType (Rep a3)) s
+  , Nub s (RecType (Rep a1))
+  , Generic a1
+  , Generic a2
+  , Generic a3
+  , IsRec (Rep a1)
+  , IsRec (Rep a2)
+  , IsRec (Rep a3)
+  ) => a3 -> a2 -> a1
+g x y = fromRec $ nub $ union (toRec y) (toRec x)
