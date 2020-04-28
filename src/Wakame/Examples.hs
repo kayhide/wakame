@@ -119,13 +119,35 @@ data Person =
   deriving (Eq, Show, Generic)
 
 g ::
-  ( Union (RecType (Rep a2)) (RecType (Rep a3)) s
-  , Nub s (RecType (Rep a1))
-  , Generic a1
-  , Generic a2
-  , Generic a3
-  , IsRec (Rep a1)
-  , IsRec (Rep a2)
-  , IsRec (Rep a3)
-  ) => a3 -> a2 -> a1
+  ( Union (RecType (Rep b)) (RecType (Rep a)) s
+  , Nub s (RecType (Rep c))
+  , Generic a
+  , Generic b
+  , Generic c
+  , IsRec (Rep a)
+  , IsRec (Rep b)
+  , IsRec (Rep c)
+  ) => a -> b -> c
 g x y = fromRec $ nub $ union (toRec y) (toRec x)
+
+
+-- | Rejecting certain fields
+--
+-- `h` is almost the same as `g` but rejecting an argument with field "y".
+-- >>> h (Point 3.5 4.3) (Timestamp "2020-04-01" "2020-04-02") :: Point
+-- ...
+-- ... Couldn't match type ...
+-- ...
+
+h ::
+  ( Union (RecType (Rep b)) (RecType (Rep a)) s
+  , Nub s (RecType (Rep c))
+  , Generic a
+  , Generic b
+  , Generic c
+  , IsRec (Rep a)
+  , IsRec (Rep b)
+  , IsRec (Rep c)
+  , Lacks "y" (RecType (Rep a))
+  ) => a -> b -> c
+h x y = fromRec $ nub $ union (toRec y) (toRec x)
