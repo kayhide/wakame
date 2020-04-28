@@ -14,13 +14,11 @@ import Wakame.Rec (Rec (..))
 -- >>> import Wakame.Examples
 
 
--- * Union typeclass
-
--- |
+-- | Typeclass for composing fields
+--
 -- >>> union (toRec pt) (toRec (Keyed @"z" 42.0))
 -- x: 1.2, y: 8.3, z: 42.0, _
-
--- |
+--
 -- >>> ununion (toRec pt) :: (Rec '[ '("x", Double)], Rec '[ '("y", Double)])
 -- (x: 1.2, _,y: 8.3, _)
 -- >>> ununion (toRec pt) :: (Rec '[], Rec '[ '("x", Double), '("y", Double)])
