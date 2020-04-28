@@ -11,7 +11,8 @@ import Wakame.Rec (Rec (..))
 
 -- $setup
 -- >>> import Wakame
--- >>> import Wakame.Examples
+-- >>> data Point = Point { x :: Double, y :: Double } deriving (Show, Generic)
+-- >>> pt = Point 1.2 8.3
 
 
 -- | Typeclass for composing fields

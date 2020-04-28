@@ -13,7 +13,9 @@ import Wakame.Utils (Append (..))
 
 
 -- $setup
--- >>> import Wakame.Examples
+-- >>> import Wakame
+-- >>> data Point = Point { x :: Double, y :: Double } deriving (Show, Generic)
+
 
 -- | Instances of generic reps to/from @Rec@
 -- >>> :kind! RecType (Rep Point)

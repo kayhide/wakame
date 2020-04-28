@@ -5,9 +5,12 @@ import Test.Tasty
 import Test.Tasty.Hspec
 import Test.Tasty.QuickCheck
 import Test.Utils
-import Wakame.Examples (Point (..))
+import Wakame.Generic ()
 import Wakame.Rec (Keyed (..), Rec (..), fromRec, toRec)
 
+
+data Point = Point { x :: Double, y :: Double }
+  deriving (Eq, Show, Generic)
 
 prop_toRec :: (Keyed "x" Double, Keyed "y" Double) -> Property
 prop_toRec (x, y) =

@@ -1,5 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
-module Wakame.Examples where
+module Wakame.Examples.Functions where
 
 import Prelude
 
@@ -113,7 +113,7 @@ data Timestamp =
 
 data Person =
   Person
-  { name :: String
+  { name       :: String
   , created_at :: String
   }
   deriving (Eq, Show, Generic)
