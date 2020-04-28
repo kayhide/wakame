@@ -31,6 +31,6 @@ instance Union '[] r r where
   union _ r = r
   ununion x = (RNil, x)
 
-instance (Union l r u, u ~ Append l r) => Union (x ': l) r (x ': u) where
+instance (Union l r u) => Union (x ': l) r (x ': u) where
   union (RCons x xs) r = RCons x $ union xs r
   ununion (RCons x xs) = first (RCons x) $ ununion xs

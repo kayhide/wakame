@@ -8,6 +8,7 @@ import Data.Kind
 import GHC.Generics
 import GHC.TypeLits
 import Wakame.Rec (FIELD, IsRec (..), Keyed (..), Rec (..))
+import Wakame.Union (Union (..))
 import Wakame.Utils (Append (..))
 
 
@@ -38,10 +39,10 @@ instance IsRec f => IsRec (C1 i f) where
   fromRec' = M1 . fromRec'
   toRec' (M1 x) = toRec' x
 
-instance (IsRec a, IsRec b, '[ '(ak, av) ] ~ RecType a) => IsRec (a :*: b) where
+instance (IsRec a, IsRec b, l ~ RecType a, r ~ RecType b, u ~ Append l r, Union l r u) => IsRec (a :*: b) where
   type RecType (a :*: b) = Append (RecType a) (RecType b)
-  fromRec' (RCons x xs) = fromRec' (RCons x RNil) :*: fromRec' xs
-  toRec' (x :*: y) = case (toRec' x) of RCons x _ -> RCons x (toRec' y)
+  fromRec' = uncurry (:*:) . (fromRec' *** fromRec') . ununion
+  toRec' (x :*: y) = union (toRec' x) (toRec' y)
 
 instance IsRec (S1 ('MetaSel ('Just (key :: Symbol)) su ss ds) (Rec0 (a :: Type))) where
   type RecType (S1 ('MetaSel ('Just key) su ss ds) (Rec0 a)) = '[ '(key, a) ]
