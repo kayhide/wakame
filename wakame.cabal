@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 59515184c75447ed58182c2b185c348e3d68b57884d2035b3357b6fa12ef5fff
+-- hash: 9678bd641df726b1d724b86a0ceacd2175b30f1200e99d8b1d81de8a78ba3786
 
 name:           wakame
 version:        0.1.0.0
@@ -66,6 +66,7 @@ test-suite wakame-examples
   main-is: Main.hs
   other-modules:
       Wakame.Examples.Functions
+      Wakame.Examples.Usage
       Paths_wakame
   hs-source-dirs:
       test/examples
