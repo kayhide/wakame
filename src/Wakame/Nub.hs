@@ -10,9 +10,11 @@ import Wakame.Rec (Keyed (..), Rec (..))
 -- >>> import Wakame
 
 
--- * Nub typeclass
-
--- |
+-- | Typeclass for reshaping fields
+-- `nub` function eliminates duplicate fileds.
+-- When duplication, the first element takes precedence.
+-- It also reorders fields so to match the return type.
+--
 -- >>> toRec (Keyed @"x" 42.0, Keyed @"x" 56.4)
 -- x: 42.0, x: 56.4, _
 -- >>> nub $ toRec (Keyed @"x" 42.0, Keyed @"x" 56.4) :: Rec '[ '("x", Double)]
@@ -27,6 +29,7 @@ instance (Nub s t, HasField s k v) => Nub s ('(k, v) ': t) where
   nub x = RCons (getField x) $ nub x
 
 
+-- | Typeclass to pick a first matched field
 class HasField r k v where
   getField :: Rec r -> Keyed k v
 
