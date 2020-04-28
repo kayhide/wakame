@@ -10,11 +10,13 @@ import GHC.TypeLits
 import Wakame.Rec (Keyed (..))
 
 
+-- $setup
+-- >>> import Wakame
+-- >>> data Point = Point { x :: Double, y :: Double } deriving (Show, Generic)
+-- >>> pt = Point 1.2 8.3
+
+
 -- | Function to retrieve key values
---
--- >>> import Wakame.Examples
--- >>> keys pt
--- ["x","y"]
 --
 -- Return value can be anything which has @IsString@ instance.
 -- >>> import Data.Functor.Identity (Identity)

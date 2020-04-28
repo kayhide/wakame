@@ -65,6 +65,18 @@ library:
   source-dirs: src
 
 tests:
+  wakame-examples:
+    main: Main.hs
+    source-dirs: test/examples
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - text
+      - time
+      - wakame
+
   wakame-doctest:
     main: Main.hs
     source-dirs: test/doctest
