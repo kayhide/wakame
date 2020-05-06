@@ -4,9 +4,9 @@ let
 in
 
 pkgs.shellFor {
-  buildInputs = [
-    pkgs.hpack.components.exes.hpack
-    pkgs.doctest.components.exes.doctest
-    pkgs.tasty-discover.components.exes.tasty-discover
-  ];
+  tools = {
+    cabal = "3.0.0.0";
+    hpack = "0.33.0";
+    tasty-discover = "4.2.1";
+  };
 }
