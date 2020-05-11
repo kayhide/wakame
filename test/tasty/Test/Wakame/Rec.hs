@@ -5,7 +5,7 @@ import Test.Tasty
 import Test.Tasty.Hspec
 import Test.Tasty.QuickCheck
 import Test.Utils
-import Wakame.Generic ()
+import Wakame.Generics ()
 import Wakame.Rec (Keyed (..), Rec (..), fromRec, toRec)
 
 

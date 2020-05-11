@@ -61,35 +61,8 @@ instance (KnownSymbol k, Show a, Show (Rec as)) => Show (Rec ('(k, a) ': as)) wh
   show (RCons x xs) = show x <> ", " <> show xs
 
 
--- | Typeclass of converting to/from @Rec@
-class IsRec f where
-  type RecType f :: [FIELD]
-  fromRec' :: Rec (RecType f) -> f a
-  toRec' :: f a -> Rec (RecType f)
-
-
--- * Functions to bypass generic reps
-
--- |
--- With Generic instances, a tuple of keyed values works.
---
--- >>> import Wakame.Generic ()
--- >>> x = Keyed @"x" @Double 3.5
--- >>> y = Keyed @"y" @Double 4.8
---
--- >>> fromRec (RCons x (RCons y RNil)) :: (Keyed "x" Double, Keyed "y" Double)
--- (x: 3.5,y: 4.8)
---
--- >>> toRec (x, y)
--- x: 3.5, y: 4.8, _
-fromRec ::
-  Generic a =>
-  IsRec (Rep a) =>
-  Rec (RecType (Rep a)) -> a
-fromRec = to . fromRec'
-
-toRec ::
-  Generic a =>
-  IsRec (Rep a) =>
-  a -> Rec (RecType (Rep a))
-toRec = toRec' . from
+-- | Typeclass of converting from/to @Rec@
+class IsRec (a :: Type) where
+  type RowOf a :: [FIELD]
+  fromRec :: Rec (RowOf a) -> a
+  toRec :: a -> Rec (RowOf a)
