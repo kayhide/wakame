@@ -6,7 +6,6 @@ import Data.Kind
 import Data.Proxy
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.Utils (Append (..))
 
 
 -- | Kind of field

@@ -9,7 +9,7 @@ import GHC.Generics
 import GHC.TypeLits
 import Wakame.Rec (FIELD, IsRec (..), Keyed (..), Rec (..))
 import Wakame.Union (Union (..))
-import Wakame.Utils (Append (..))
+import Wakame.Utils (type (++))
 
 
 -- $setup
@@ -53,8 +53,8 @@ instance IsRec' f => IsRec' (C1 i f) where
   fromRec' = M1 . fromRec'
   toRec' (M1 x) = toRec' x
 
-instance (IsRec' a, IsRec' b, l ~ RowOf' a, r ~ RowOf' b, u ~ Append l r, Union l r u) => IsRec' (a :*: b) where
-  type RowOf' (a :*: b) = Append (RowOf' a) (RowOf' b)
+instance (IsRec' a, IsRec' b, l ~ RowOf' a, r ~ RowOf' b, Union l r (l ++ r)) => IsRec' (a :*: b) where
+  type RowOf' (a :*: b) = (RowOf' a) ++ (RowOf' b)
   fromRec' = uncurry (:*:) . (fromRec' *** fromRec') . ununion
   toRec' (x :*: y) = union (toRec' x) (toRec' y)
 

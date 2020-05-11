@@ -10,7 +10,6 @@ import Data.Time (UTCTime)
 import GHC.Generics
 import GHC.TypeLits
 import Wakame
-import Wakame.Utils (Append)
 
 
 
