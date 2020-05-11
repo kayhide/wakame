@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9678bd641df726b1d724b86a0ceacd2175b30f1200e99d8b1d81de8a78ba3786
+-- hash: 1c0e2c27c4649ba036d27690ec809ab33e98a842445dda3f37dc6f4566cfb7f0
 
 name:           wakame
 version:        0.1.0.0
@@ -30,7 +30,7 @@ source-repository head
 library
   exposed-modules:
       Wakame
-      Wakame.Generic
+      Wakame.Generics
       Wakame.Keys
       Wakame.Lacks
       Wakame.Nub

@@ -93,7 +93,7 @@ f props = fromRec $ nub $ union props def
     def :: Rec PointRow
     def = toRec $ Point 0.0 0.0
 
-type PointRow = RecType (Rep Point)
+type PointRow = RowOf Point
 
 
 -- | Filling common fields if existing
@@ -119,14 +119,11 @@ data Person =
   deriving (Eq, Show, Generic)
 
 g ::
-  ( Union (RecType (Rep b)) (RecType (Rep a)) s
-  , Nub s (RecType (Rep c))
-  , Generic a
-  , Generic b
-  , Generic c
-  , IsRec (Rep a)
-  , IsRec (Rep b)
-  , IsRec (Rep c)
+  ( Union (RowOf b) (RowOf a) s
+  , Nub s (RowOf c)
+  , IsRec a
+  , IsRec b
+  , IsRec c
   ) => a -> b -> c
 g x y = fromRec $ nub $ union (toRec y) (toRec x)
 
@@ -140,14 +137,11 @@ g x y = fromRec $ nub $ union (toRec y) (toRec x)
 -- ...
 
 h ::
-  ( Union (RecType (Rep b)) (RecType (Rep a)) s
-  , Nub s (RecType (Rep c))
-  , Generic a
-  , Generic b
-  , Generic c
-  , IsRec (Rep a)
-  , IsRec (Rep b)
-  , IsRec (Rep c)
-  , Lacks "y" (RecType (Rep a))
+  ( Union (RowOf b) (RowOf a) s
+  , Nub s (RowOf c)
+  , IsRec a
+  , IsRec b
+  , IsRec c
+  , Lacks "y" (RowOf a)
   ) => a -> b -> c
 h x y = fromRec $ nub $ union (toRec y) (toRec x)
