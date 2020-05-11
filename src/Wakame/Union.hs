@@ -5,7 +5,6 @@ import Prelude
 
 import Control.Arrow (first)
 import GHC.Generics
-import Wakame.Utils (Append (..))
 import Wakame.Rec (Rec (..))
 
 
