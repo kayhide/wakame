@@ -1,7 +1,7 @@
 import Test.DocTest
 
 main :: IO ()
-main = doctest $ ["src", "test/examples/Wakame/Examples/Functions.hs"] <> extensions
+main = doctest $ ["src", "test/examples"] <> extensions
 
 extensions :: [String]
 extensions =
