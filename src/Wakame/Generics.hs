@@ -5,65 +5,69 @@ import Prelude
 
 import Control.Arrow ((***))
 import Data.Kind
+import Data.SOP.NP
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.Rec (FIELD, IsRec (..), Keyed (..), Rec (..))
+import Wakame.Row (FIELD, IsRow (..), Row, V (..))
 import Wakame.Union (Union (..))
 import Wakame.Utils (type (++))
 
 
 -- $setup
+-- >>> import Wakame
 -- >>> data Point = Point { x :: Double, y :: Double } deriving (Show, Generic)
 
 
--- | Instance of @IsRec@ over generic rep
--- >>> :kind! RowOf Point
--- RowOf Point :: [(Symbol, *)]
+-- | Instance of @IsRow@ over generic rep
+-- >>> :kind! Of Point
+-- Of Point :: [(Symbol, *)]
 -- = '[ '("x", Double), '("y", Double)]
 --
--- >>> toRec' $ from $ Point 1.2 8.3
--- x: 1.2, y: 8.3, _
--- >>> to @Point $ fromRec' $ (RCons (Keyed @"x" 1.2) $ RCons (Keyed @"y" 8.3) RNil)
+-- >>> toRow' $ from $ Point 1.2 8.3
+-- (x: 1.2) :* (y: 8.3) :* Nil
+-- >>> to @Point $ fromRow' $ keyed @"x" 1.2 :* keyed @"y" 8.3 :* Nil
 -- Point {x = 1.2, y = 8.3}
-instance (Generic a, IsRec' (Rep a)) => IsRec a where
-  type RowOf a = RowOf' (Rep a)
-  fromRec = to . fromRec'
-  toRec = toRec' . from
+
+
+instance (Generic a, IsRow' (Rep a)) => IsRow a where
+  type Of a = Of' (Rep a)
+  fromRow = to . fromRow'
+  toRow = toRow' . from
 
 
 -- * Internal
 
-class IsRec' f where
-  type RowOf' f :: [FIELD]
-  fromRec' :: Rec (RowOf' f) -> f a
-  toRec' :: f a -> Rec (RowOf' f)
+class IsRow' f where
+  type Of' f :: [FIELD]
+  fromRow' :: Row (Of' f) -> f a
+  toRow' :: f a -> Row (Of' f)
 
-instance IsRec' U1 where
-  type RowOf' U1 = '[]
-  fromRec' = const U1
-  toRec' = const RNil
+instance IsRow' U1 where
+  type Of' U1 = '[]
+  fromRow' = const U1
+  toRow' = const Nil
 
-instance IsRec' f => IsRec' (D1 i f) where
-  type RowOf' (D1 i f) = RowOf' f
-  fromRec' = M1 . fromRec'
-  toRec' (M1 x) = toRec' x
+instance IsRow' f => IsRow' (D1 i f) where
+  type Of' (D1 i f) = Of' f
+  fromRow' = M1 . fromRow'
+  toRow' (M1 x) = toRow' x
 
-instance IsRec' f => IsRec' (C1 i f) where
-  type RowOf' (C1 i f) = RowOf' f
-  fromRec' = M1 . fromRec'
-  toRec' (M1 x) = toRec' x
+instance IsRow' f => IsRow' (C1 i f) where
+  type Of' (C1 i f) = Of' f
+  fromRow' = M1 . fromRow'
+  toRow' (M1 x) = toRow' x
 
-instance (IsRec' a, IsRec' b, l ~ RowOf' a, r ~ RowOf' b, Union l r (l ++ r)) => IsRec' (a :*: b) where
-  type RowOf' (a :*: b) = (RowOf' a) ++ (RowOf' b)
-  fromRec' = uncurry (:*:) . (fromRec' *** fromRec') . ununion
-  toRec' (x :*: y) = union (toRec' x) (toRec' y)
+instance (IsRow' a, IsRow' b, l ~ Of' a, r ~ Of' b, Union l r (l ++ r)) => IsRow' (a :*: b) where
+  type Of' (a :*: b) = (Of' a) ++ (Of' b)
+  fromRow' = uncurry (:*:) . (fromRow' *** fromRow') . ununion
+  toRow' (x :*: y) = union (toRow' x) (toRow' y)
 
-instance IsRec' (S1 ('MetaSel ('Just (key :: Symbol)) su ss ds) (Rec0 (a :: Type))) where
-  type RowOf' (S1 ('MetaSel ('Just key) su ss ds) (Rec0 a)) = '[ '(key, a) ]
-  fromRec' (RCons (Keyed x) RNil) = M1 $ K1 x
-  toRec' (M1 (K1 x)) = RCons (Keyed x) RNil
+instance IsRow' (S1 ('MetaSel ('Just (key :: Symbol)) su ss ds) (Rec0 (a :: Type))) where
+  type Of' (S1 ('MetaSel ('Just key) su ss ds) (Rec0 a)) = '[ '(key, a) ]
+  fromRow' (V x :* Nil) = M1 $ K1 x
+  toRow' (M1 (K1 x)) = V x :* Nil
 
-instance IsRec' (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (Keyed key a))) where
-  type RowOf' (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (Keyed key a))) = '[ '(key, a) ]
-  fromRec' (RCons x RNil) = M1 $ K1 x
-  toRec' (M1 (K1 x)) = RCons x RNil
+instance IsRow' (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (V '(key, a)))) where
+  type Of' (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (V '(key, a)))) = '[ '(key, a) ]
+  fromRow' (x :* Nil) = M1 $ K1 x
+  toRow' (M1 (K1 x)) = x :* Nil

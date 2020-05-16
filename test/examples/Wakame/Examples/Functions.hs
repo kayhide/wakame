@@ -36,7 +36,7 @@ data Tniop = Tniop { y :: Double, x :: Double }
 -- We can construct a representation value by hand.
 -- >>> rep = M1 $ M1 $ M1 (K1 1.2) :*: M1 (K1 8.3)
 --
--- From the representation value, `to` function converts to @Record@.
+-- From the representation value, `to` function converts to @Roword@.
 -- >>> to rep :: Point
 -- Point {x = 1.2, y = 8.3}
 --
@@ -52,48 +52,48 @@ pt = Point 1.2 8.3
 
 
 
--- * Examples of Record value manipulation
+-- * Examples of Roword value manipulation
 
--- | Round trip of Point to/from Rec
--- >>> fromRec @Point $ toRec pt
+-- | Round trip of Point to/from Row
+-- >>> fromRow @Point $ toRow pt
 -- Point {x = 1.2, y = 8.3}
 
 -- | Converting Point to Point3d by adding z field
--- >>> fromRec @Point3d $ union (toRec pt) (toRec (Keyed @"z" 42.0))
+-- >>> fromRow @Point3d $ union (toRow pt) (toRow (keyed @"z" 42.0))
 -- Point3d {x = 1.2, y = 8.3, z = 42.0}
 
 
 -- | Interfacing optional fields
 --
 -- `f` fills absent fileds with `0.0`.
--- >>> f $ toRec (Keyed @"x" 3.5)
+-- >>> f $ toRow (keyed @"x" 3.5)
 -- Point {x = 3.5, y = 0.0}
 --
 -- Ignores extra fields.
--- >>> f $ toRec (Keyed @"y" 4.3, Keyed @"z" 1.6)
+-- >>> f $ toRow (keyed @"y" 4.3, keyed @"z" 1.6)
 -- Point {x = 0.0, y = 4.3}
 --
 -- Converts from another data type.
--- >>> f $ toRec $ Point3d 3.5 4.3 1.6
+-- >>> f $ toRow $ Point3d 3.5 4.3 1.6
 -- Point {x = 3.5, y = 4.3}
 --
 -- Returns fully default value when `()` is given.
--- >>> f $ toRec ()
+-- >>> f $ toRow ()
 -- Point {x = 0.0, y = 0.0}
 --
 -- Works nicely with data whose fields order is not the same.
--- >>> f $ toRec $ Tniop 4.3 3.5
+-- >>> f $ toRow $ Tniop 4.3 3.5
 -- Point {x = 3.5, y = 4.3}
 f ::
   ( Union props PointRow props'
   , Nub props' PointRow
-  ) => Rec props -> Point
-f props = fromRec $ nub $ union props def
+  ) => Row props -> Point
+f props = fromRow $ nub $ union props def
   where
-    def :: Rec PointRow
-    def = toRec $ Point 0.0 0.0
+    def :: Row PointRow
+    def = toRow $ Point 0.0 0.0
 
-type PointRow = RowOf Point
+type PointRow = Of Point
 
 
 -- | Filling common fields if existing
@@ -119,13 +119,13 @@ data Person =
   deriving (Eq, Show, Generic)
 
 g ::
-  ( Union (RowOf b) (RowOf a) s
-  , Nub s (RowOf c)
-  , IsRec a
-  , IsRec b
-  , IsRec c
+  ( Union (Of b) (Of a) s
+  , Nub s (Of c)
+  , IsRow a
+  , IsRow b
+  , IsRow c
   ) => a -> b -> c
-g x y = fromRec $ nub $ union (toRec y) (toRec x)
+g x y = fromRow $ nub $ union (toRow y) (toRow x)
 
 
 -- | Rejecting certain fields
@@ -137,11 +137,11 @@ g x y = fromRec $ nub $ union (toRec y) (toRec x)
 -- ...
 
 h ::
-  ( Union (RowOf b) (RowOf a) s
-  , Nub s (RowOf c)
-  , IsRec a
-  , IsRec b
-  , IsRec c
-  , Lacks "y" (RowOf a)
+  ( Union (Of b) (Of a) s
+  , Nub s (Of c)
+  , IsRow a
+  , IsRow b
+  , IsRow c
+  , Lacks "y" (Of a)
   ) => a -> b -> c
-h x y = fromRec $ nub $ union (toRec y) (toRec x)
+h x y = fromRow $ nub $ union (toRow y) (toRow x)

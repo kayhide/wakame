@@ -4,11 +4,12 @@ module Wakame.Union where
 import Prelude
 
 import Control.Arrow (first)
-import GHC.Generics
-import Wakame.Rec (Rec (..))
+import Data.SOP.NP
+import Wakame.Row (Row)
 
 
 -- $setup
+-- >>> import GHC.Generics
 -- >>> import Wakame
 -- >>> data Point = Point { x :: Double, y :: Double } deriving (Show, Generic)
 -- >>> pt = Point 1.2 8.3
@@ -16,21 +17,21 @@ import Wakame.Rec (Rec (..))
 
 -- | Typeclass for composing fields
 --
--- >>> union (toRec pt) (toRec (Keyed @"z" 42.0))
--- x: 1.2, y: 8.3, z: 42.0, _
+-- >>> union (toRow pt) (toRow (keyed @"z" 42.0))
+-- (x: 1.2) :* (y: 8.3) :* (z: 42.0) :* Nil
 --
--- >>> ununion (toRec pt) :: (Rec '[ '("x", Double)], Rec '[ '("y", Double)])
--- (x: 1.2, _,y: 8.3, _)
--- >>> ununion (toRec pt) :: (Rec '[], Rec '[ '("x", Double), '("y", Double)])
--- (_,x: 1.2, y: 8.3, _)
+-- >>> ununion (toRow pt) :: (Row '[ '("x", Double)], Row '[ '("y", Double)])
+-- ((x: 1.2) :* Nil,(y: 8.3) :* Nil)
+-- >>> ununion (toRow pt) :: (Row '[], Row '[ '("x", Double), '("y", Double)])
+-- (Nil,(x: 1.2) :* (y: 8.3) :* Nil)
 class Union l r u | l r -> u where
-  union :: Rec l -> Rec r -> Rec u
-  ununion :: Rec u -> (Rec l, Rec r)
+  union :: Row l -> Row r -> Row u
+  ununion :: Row u -> (Row l, Row r)
 
 instance Union '[] r r where
   union _ r = r
-  ununion x = (RNil, x)
+  ununion x = (Nil, x)
 
 instance (Union l r u) => Union (x ': l) r (x ': u) where
-  union (RCons x xs) r = RCons x $ union xs r
-  ununion (RCons x xs) = first (RCons x) $ ununion xs
+  union (x :* xs) r = x :* union xs r
+  ununion (x :* xs) = first (x :*) $ ununion xs

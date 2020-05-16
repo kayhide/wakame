@@ -2,8 +2,8 @@ module Wakame.Nub where
 
 import Prelude
 
-import GHC.Generics
-import Wakame.Rec (Keyed (..), Rec (..))
+import Data.SOP.NP (NP (..))
+import Wakame.Row (Row, V)
 
 
 -- $setup
@@ -15,26 +15,26 @@ import Wakame.Rec (Keyed (..), Rec (..))
 -- When duplication, the first element takes precedence.
 -- It also reorders fields so to match the return type.
 --
--- >>> toRec (Keyed @"x" 42.0, Keyed @"x" 56.4)
--- x: 42.0, x: 56.4, _
--- >>> nub $ toRec (Keyed @"x" 42.0, Keyed @"x" 56.4) :: Rec '[ '("x", Double)]
--- x: 42.0, _
+-- >>> toRow (keyed @"x" 42.0, keyed @"x" 56.4)
+-- (x: 42.0) :* (x: 56.4) :* Nil
+-- >>> nub $ toRow (keyed @"x" 42.0, keyed @"x" 56.4) :: Row '[ '("x", Double)]
+-- (x: 42.0) :* Nil
 class Nub s t where
-  nub :: Rec s -> Rec t
+  nub :: Row s -> Row t
 
 instance Nub s '[] where
-  nub x = RNil
+  nub _ = Nil
 
 instance (Nub s t, HasField s k v) => Nub s ('(k, v) ': t) where
-  nub x = RCons (getField x) $ nub x
+  nub x = getField x :* nub x
 
 
 -- | Typeclass to pick a first matched field
 class HasField r k v where
-  getField :: Rec r -> Keyed k v
+  getField :: Row r -> V '(k, v)
 
 instance {-# OVERLAPS #-} HasField ('(k, v) ': rs) k v where
-  getField (RCons x _) = x
+  getField (x :* _) = x
 
 instance HasField rs k v => HasField (r ': rs) k v where
-  getField (RCons _ xs) = getField xs
+  getField (_ :* xs) = getField xs

@@ -7,7 +7,7 @@ import Data.Proxy
 import Data.String (IsString (..))
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.Rec (Keyed (..))
+import Wakame.Row (V (..))
 
 
 -- $setup
@@ -41,5 +41,5 @@ instance (Keys' s a, Keys' s b) => Keys' s (a :*: b) where
 instance (IsString s, KnownSymbol key) => Keys' s (S1 ('MetaSel ('Just key) su ss ds) a) where
   keys' _ = [fromString $ symbolVal (Proxy @key)]
 
-instance (IsString s, KnownSymbol key) => Keys' s (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (Keyed key a))) where
+instance (IsString s, KnownSymbol key) => Keys' s (S1 ('MetaSel 'Nothing su ss ds) (Rec0 (V '(key, a)))) where
   keys' _ = [fromString $ symbolVal (Proxy @key)]
