@@ -17,6 +17,7 @@ description: Please see the README on GitHub at <https://github.com/kayhide/waka
 
 dependencies:
   - base
+  - sop-core
 
 default-extensions:
   - AutoDeriveTypeable
@@ -31,6 +32,7 @@ default-extensions:
   - DeriveFunctor
   - DeriveGeneric
   - DeriveTraversable
+  - DerivingStrategies
   - DoAndIfThenElse
   - EmptyDataDecls
   - ExistentialQuantification

@@ -35,7 +35,7 @@ data UpdatingUser =
   deriving (Show, Generic)
 
 updateUser :: UpdatingUser -> User -> User
-updateUser updating user = fromRec $ nub $ union (toRec updating) (toRec user)
+updateUser updating user = fromRow $ nub $ union (toRow updating) (toRow user)
 
 
 
@@ -43,10 +43,10 @@ data UpdatedAt = UpdatedAt { updated_at :: UTCTime }
   deriving (Show, Generic)
 
 touchUser :: UTCTime -> User -> User
-touchUser time user = fromRec $ nub $ union (toRec $ UpdatedAt time) (toRec user)
+touchUser time user = fromRow $ nub $ union (toRow $ UpdatedAt time) (toRow user)
 
 
 
 updateAndTouchUser :: UpdatingUser -> UTCTime -> User -> User
 updateAndTouchUser updating time user =
-  fromRec $ nub $ union (toRec updating) $ union (toRec $ UpdatedAt time) (toRec user)
+  fromRow $ nub $ union (toRow updating) $ union (toRow $ UpdatedAt time) (toRow user)

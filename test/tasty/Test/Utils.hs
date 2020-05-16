@@ -2,9 +2,9 @@ module Test.Utils where
 
 
 import Test.QuickCheck (Arbitrary (..))
-import Wakame.Rec (Keyed (..))
+import Wakame.Row (V (..))
 
 
-instance Arbitrary a => Arbitrary (Keyed k a) where
-  arbitrary = Keyed <$> arbitrary
-  shrink (Keyed x) = Keyed <$> shrink x
+instance Arbitrary a => Arbitrary (V '(k, a)) where
+  arbitrary = V <$> arbitrary
+  shrink (V x) = V <$> shrink x
