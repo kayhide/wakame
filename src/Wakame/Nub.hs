@@ -1,3 +1,4 @@
+{-# LANGUAGE UndecidableSuperClasses #-}
 module Wakame.Nub where
 
 import Prelude
@@ -24,16 +25,16 @@ class Nub s t where
 instance Nub s '[] where
   nub _ = Nil
 
-instance (Nub s t, HasField s k v) => Nub s ('(k, v) ': t) where
+instance (Nub s t, HasField s p) => Nub s (p ': t) where
   nub x = getField x :* nub x
 
 
 -- | Typeclass to pick a first matched field
-class HasField r k v where
-  getField :: Row r -> V '(k, v)
+class HasField r p where
+  getField :: Row r -> V p
 
-instance {-# OVERLAPS #-} HasField ('(k, v) ': rs) k v where
+instance {-# OVERLAPS #-} HasField (p ': rs) p where
   getField (x :* _) = x
 
-instance HasField rs k v => HasField (r ': rs) k v where
+instance HasField rs p => HasField (r ': rs) p where
   getField (_ :* xs) = getField xs
