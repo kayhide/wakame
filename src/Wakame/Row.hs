@@ -1,11 +1,25 @@
 {-# LANGUAGE UndecidableInstances #-}
-module Wakame.Row where
+module Wakame.Row
+  ( FIELD
+
+  -- * Keyed value type and function
+  , V (..)
+  , Keyed
+  , keyed
+
+  -- * Row type
+  , Row
+  , IsRow (..)
+
+  -- * Re-export from Data.SOP.NP
+  , NP (..)
+  ) where
 
 import Prelude
 
 import Data.Kind
 import Data.Proxy
-import Data.SOP.NP
+import Data.SOP.NP (NP (..))
 import GHC.Generics
 import GHC.TypeLits
 

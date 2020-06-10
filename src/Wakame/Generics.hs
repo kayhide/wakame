@@ -5,10 +5,9 @@ import Prelude
 
 import Control.Arrow ((***))
 import Data.Kind
-import Data.SOP.NP
 import GHC.Generics
 import GHC.TypeLits
-import Wakame.Row (FIELD, IsRow (..), Row, V (..))
+import Wakame.Row (FIELD, IsRow (..), NP (..), Row, V (..))
 import Wakame.Union (Union (..))
 import Wakame.Utils (type (++))
 
