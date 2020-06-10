@@ -2,8 +2,7 @@ module Wakame.Nub where
 
 import Prelude
 
-import Data.SOP.NP (NP (..))
-import Wakame.Row (Row, V)
+import Wakame.Row (NP (..), Row, V)
 
 
 -- $setup

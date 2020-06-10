@@ -1,13 +1,12 @@
 module Test.Wakame.Row where
 
-import Data.SOP.NP
 import GHC.Generics
 import Test.Tasty
 import Test.Tasty.Hspec
 import Test.Tasty.QuickCheck
-import Test.Utils
+import Test.Utils ()
 import Wakame.Generics ()
-import Wakame.Row (Row (..), V (..), fromRow, toRow)
+import Wakame.Row (NP (..), V (..), fromRow, toRow)
 
 
 data Point = Point { x :: Double, y :: Double }

@@ -4,8 +4,7 @@ module Wakame.Union where
 import Prelude
 
 import Control.Arrow (first)
-import Data.SOP.NP
-import Wakame.Row (Row)
+import Wakame.Row (NP (..), Row)
 
 
 -- $setup
