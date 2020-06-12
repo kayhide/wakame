@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9f914913dc2c73e63e9d775604aa3b6841bd9ff0d67669bdbb9e890e8f89bcb
+-- hash: f3daf367ec7736395c52a0a135b3ee19eb3f199805d8bede4d921409d88ef8d2
 
 name:           wakame
 version:        0.1.0.0
@@ -32,6 +32,7 @@ library
       Wakame
       Wakame.Generics
       Wakame.Keys
+      Wakame.Labels
       Wakame.Lacks
       Wakame.Merge
       Wakame.Nub
