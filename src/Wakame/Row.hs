@@ -32,7 +32,7 @@ type FIELD = (Symbol, Type)
 -- |
 -- >>> V 3 :: V '("x", Int)
 -- (x: 3)
-newtype V (p :: FIELD) = V (Snd p)
+newtype V (p :: FIELD) = V { unV :: Snd p }
 
 instance (KnownSymbol (Fst p), Show (Snd p)) => Show (V p) where
   show (V x) = "(" <> symbolVal (Proxy @(Fst p)) <> ": " <> show x <> ")"
