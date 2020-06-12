@@ -22,24 +22,12 @@ import Data.Proxy
 import Data.SOP.NP (NP (..))
 import GHC.Generics
 import GHC.TypeLits
+import Wakame.Utils (Fst, Snd)
 
 
 -- | Kind of field
 type FIELD = (Symbol, Type)
 
--- |
--- >>> :kind! Fst '(Bool, Char)
--- Fst '(Bool, Char) :: *
--- = Bool
-type family Fst (p :: (a, b)) :: a
-type instance Fst '(a, b) = a
-
--- |
--- >>> :kind! Snd '(Bool, Char)
--- Snd '(Bool, Char) :: *
--- = Char
-type family Snd (p :: (a, b)) :: b
-type instance Snd '(a, b) = b
 
 -- |
 -- >>> V 3 :: V '("x", Int)
@@ -62,7 +50,7 @@ instance Generic (V '(k, v)) where
 type Keyed k v = V '(k, v)
 
 keyed :: KnownSymbol k => v -> Keyed k v
-keyed x = V x
+keyed = V
 
 -- * Row type
 
