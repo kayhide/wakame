@@ -64,31 +64,29 @@ data ModelBase a =
 
 
 create ::
-  forall a b attrs.
+  forall a b.
   ( IsRow a
   , IsRow b
   , Lacks "id" (Of a)
-  , Union (Of a) (Of (ModelBase b)) attrs
-  , Nub attrs (Of b)
+  , Merge (Of a) (Of (ModelBase b)) (Of b)
   ) => a -> IO b
 create x = do
   now <- getCurrentTime
   let y =
-        fromRow $ nub
-        $ union (toRow x)
-        $ toRow $ ModelBase (ID @b 0) now now
+        fromRow
+        $ merge (toRow x)
+        $ toRow $ ModelBase @b (ID 0) now now
   pure y
 
 
 update ::
   ( IsRow a
-  , Union (Of UpdatedAt) (Of a) attrs
-  , Nub attrs (Of a)
+  , Merge (Of UpdatedAt) (Of a) (Of a)
   ) => a -> IO a
 update x = do
   now <- getCurrentTime
   let y =
-        fromRow $ nub
-        $ union (toRow $ UpdatedAt now)
+        fromRow
+        $ merge (toRow $ UpdatedAt now)
         $ toRow x
   pure y
