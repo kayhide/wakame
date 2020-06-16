@@ -11,7 +11,7 @@ import GHC.TypeLits
 import Wakame
 
 
--- * Data types which is used in this Wakame.Examples module
+-- * Data types which is used in this module
 
 data Point = Point { x :: Double, y :: Double }
   deriving (Eq, Show, Generic)
@@ -27,16 +27,20 @@ data Tniop = Tniop { y :: Double, x :: Double }
 
 
 -- | An instance of @Point@ data type.
--- Let's review the basic functionality of @Generic@.
+pt :: Point
+pt = Point 1.2 8.3
+
+-- | Review of @Generic@
+-- Let's review the basic functionality of an instance of @Generic@ typeclass.
 --
--- `from` function converts to its generic representation.
+-- `from` function converts a data to its generic representation.
 -- >>> from pt
 -- M1 {unM1 = M1 {unM1 = M1 {unM1 = K1 {unK1 = 1.2}} :*: M1 {unM1 = K1 {unK1 = 8.3}}}}
 --
--- We can construct a representation value by hand.
+-- You can construct a representation value by hand.
 -- >>> rep = M1 $ M1 $ M1 (K1 1.2) :*: M1 (K1 8.3)
 --
--- From the representation value, `to` function converts to @Roword@.
+-- From the representation value, `to` function converts back to @Point@.
 -- >>> to rep :: Point
 -- Point {x = 1.2, y = 8.3}
 --
@@ -47,12 +51,14 @@ data Tniop = Tniop { y :: Double, x :: Double }
 -- And even so to Tuple.
 -- >>> to rep :: (Double, Double)
 -- (1.2,8.3)
-pt :: Point
-pt = Point 1.2 8.3
+--
+-- It is sensitive to the order of elements.
+-- >>> to rep :: Tniop
+-- Tniop {y = 1.2, x = 8.3}
 
 
 
--- * Examples of Roword value manipulation
+-- * Examples of record value manipulation
 
 -- | Round trip of Point to/from Row
 -- >>> fromRow @Point $ toRow pt
@@ -73,7 +79,7 @@ pt = Point 1.2 8.3
 -- >>> f $ toRow (keyed @"y" 4.3, keyed @"z" 1.6)
 -- Point {x = 0.0, y = 4.3}
 --
--- Converts from another data type.
+-- Converts from another type of data.
 -- >>> f $ toRow $ Point3d 3.5 4.3 1.6
 -- Point {x = 3.5, y = 4.3}
 --
@@ -81,19 +87,18 @@ pt = Point 1.2 8.3
 -- >>> f $ toRow ()
 -- Point {x = 0.0, y = 0.0}
 --
--- Works nicely with data whose fields order is not the same.
+-- Works nicely no matter how the order of fields is.
 -- >>> f $ toRow $ Tniop 4.3 3.5
 -- Point {x = 3.5, y = 4.3}
 f ::
-  ( Union props PointRow props'
-  , Nub props' PointRow
+  ( Merge props OfPoint OfPoint
   ) => Row props -> Point
-f props = fromRow $ nub $ union props def
+f props = fromRow $ merge props def
   where
-    def :: Row PointRow
+    def :: Row OfPoint
     def = toRow $ Point 0.0 0.0
 
-type PointRow = Of Point
+type OfPoint = Of Point
 
 
 -- | Filling common fields if existing
@@ -119,29 +124,27 @@ data Person =
   deriving (Eq, Show, Generic)
 
 g ::
-  ( Union (Of b) (Of a) s
-  , Nub s (Of c)
-  , IsRow a
+  ( IsRow a
   , IsRow b
   , IsRow c
+  , Merge (Of b) (Of a) (Of c)
   ) => a -> b -> c
 g x y = fromRow $ nub $ union (toRow y) (toRow x)
 
 
 -- | Rejecting certain fields
 --
--- `h` is almost the same as `g` but rejecting an argument with field "y".
+-- `h` is the same as `g` except rejecting the first argument of having a field "y".
 -- >>> h (Point 3.5 4.3) (Timestamp "2020-04-01" "2020-04-02") :: Point
 -- ...
 -- ... Couldn't match type ...
 -- ...
 
 h ::
-  ( Union (Of b) (Of a) s
-  , Nub s (Of c)
-  , IsRow a
+  ( IsRow a
   , IsRow b
   , IsRow c
+  , Merge (Of b) (Of a) (Of c)
   , Lacks "y" (Of a)
   ) => a -> b -> c
 h x y = fromRow $ nub $ union (toRow y) (toRow x)

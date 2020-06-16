@@ -1,4 +1,4 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE AllowAmbiguousTypes   #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 module Wakame.Examples.Usage where
 
@@ -10,16 +10,14 @@ import GHC.Generics
 import Wakame
 
 
-
-newtype UserId = UserId Int
+newtype ID a = ID Int
   deriving (Eq, Show, Generic)
-
 
 data User =
   User
-  { id    :: UserId
-  , email :: Text
-  , password   :: Text
+  { id         :: ID User
+  , email      :: Text
+  , username   :: Text
   , created_at :: UTCTime
   , updated_at :: UTCTime
   }
@@ -28,40 +26,28 @@ data User =
 data UpdatingUser =
   UpdatingUser
   { email    :: Text
-  , password :: Text
+  , username :: Text
   }
   deriving (Show, Generic)
 
 updateUser :: UpdatingUser -> User -> User
 updateUser updating user = fromRow $ nub $ union (toRow updating) (toRow user)
 
-
-
-data UpdatedAt = UpdatedAt { updated_at :: UTCTime }
-  deriving (Show, Generic)
-
 touchUser :: UTCTime -> User -> User
-touchUser time user = fromRow $ nub $ union (toRow $ UpdatedAt time) (toRow user)
-
-
+touchUser time user = fromRow $ nub $ union (toRow $ keyed @"updated_at" time) (toRow user)
 
 updateAndTouchUser :: UpdatingUser -> UTCTime -> User -> User
 updateAndTouchUser updating time user =
-  fromRow $ nub $ union (toRow updating) $ union (toRow $ UpdatedAt time) (toRow user)
+  fromRow $ nub $ union (toRow updating) $ union (toRow $ keyed @"updated_at" time) (toRow user)
 
-
-
-newtype ID a = ID Int
-  deriving (Eq, Show, Generic)
 
 data ModelBase a =
   ModelBase
   { id         :: ID a
-  , created_at :: !UTCTime
-  , updated_at :: !UTCTime
+  , created_at :: UTCTime
+  , updated_at :: UTCTime
   }
   deriving (Eq, Show, Generic)
-
 
 create ::
   forall a b.
@@ -72,21 +58,25 @@ create ::
   ) => a -> IO b
 create x = do
   now <- getCurrentTime
+  id' <- pure $ ID @b 42 -- shall be `getNextID` or something in practice.
   let y =
         fromRow
         $ merge (toRow x)
-        $ toRow $ ModelBase @b (ID 0) now now
+        $ toRow $ ModelBase @b id' now now
   pure y
 
-
+type OfUpdatedAt = '[ '("updated_at", UTCTime) ]
 update ::
   ( IsRow a
-  , Merge (Of UpdatedAt) (Of a) (Of a)
-  ) => a -> IO a
-update x = do
+  , IsRow b
+  , Union (Of a) (Of b) ab
+  , Merge OfUpdatedAt ab (Of b)
+  ) => a -> b -> IO b
+update updating x = do
   now <- getCurrentTime
   let y =
         fromRow
-        $ merge (toRow $ UpdatedAt now)
+        $ merge (toRow $ keyed @"updated_at" now)
+        $ union (toRow updating)
         $ toRow x
   pure y
