@@ -194,6 +194,8 @@ tuple of `keyed` values in place of an anonymous record.
 
 [Wakame](https://en.wikipedia.org/wiki/Wakame) is a type of edible seaweed, popular in Japan.
 
+The most important property of wakame is that, it changes its color when boiled.
+
 ## Contributions
 
 Feel free to open an issue or PR.
