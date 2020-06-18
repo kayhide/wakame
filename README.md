@@ -178,19 +178,20 @@ For more details, see the paper [True Sums Of Products](https://www.andres-loeh.
 built on top of `sop-core`.  It focuses on the representation of a record data
 type and provides a set of functions for doing conversions.
 
-The difference is that `records-sop` is more general, and also covers
-functionality for non-record data types.  `wakame` is specialized for only
-record data types.
+The difference is that `records-sop` is relying on `generics-sop` which is more 
+general and also covers non-record data types. 
+`wakame` is specialized for only record data types.
 
 Although the representation data types is virtually the same between
 `records-sop` and `wakame`, how to convert between data types is different.
 
-One of the benefits of `wakame` is the ability to introduce special conversion rules such as `keyed @"label" value` to / from `Row`.
+One of the benefits of `wakame` is the ability to introduce special conversion 
+rules such as `keyed @"label" value` to / from `Row`.
 
 `wakame` gives you the ability to make a single `keyed` value correspond to the
 representation of a data type with one field, and any arbitrary tuple of
-`keyed` values to a data type with multiple fields.  In this way, you can use a
-tuple of `keyed` values in place of an anonymous record.
+`keyed` values to a data type with multiple fields.
+In this way, you can use a tuple of `keyed` values in place of an anonymous record.
 
 ## What is wakame?
 
