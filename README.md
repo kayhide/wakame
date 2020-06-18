@@ -22,7 +22,7 @@ data User =
   deriving Generic
 ```
 
-To update a part of this record fields, define a data type corresponding to the updating fields as:
+To update a subset of the `User` record's fields, first define a data type containing the fields you want to update:
 
 ```haskell
 data UpdatingUser =
@@ -33,15 +33,15 @@ data UpdatingUser =
   deriving Generic
 ```
 
-and write a function as:
+Then, write a function for doing the update:
 
 
 ```haskell
-updateUser :: UpdatingUser -> User -> User 
+updateUser :: UpdatingUser -> User -> User
 updateUser updating user = fromRec $ nub $ union (toRec updating) (toRec user)
 ```
 
-Here is a working example of this function:
+Here is a working example of using this function:
 
 ```haskell
 > user
@@ -52,23 +52,22 @@ UpdatingUser {email = "spider@man.com", username = "Spider Man"}
 User {id = ID 42, email = "spider@man.com", username = "Spider Man", created_at = 2020-06-16 11:22:11.991147596 UTC, updated_at = 2020-06-16 11:22:11.991147596 UTC}
 ```
 
-
-To update the `updated_at` field, it can be done in the same manner.
-But this time, let's do it without defining any record type:
-
+Updating the `updated_at` field in `User` can be done in the same manner.  But
+this time, let's do it without defining a separate record type:
 
 ```haskell
 touchUser :: UTCTime -> User -> User
 touchUser time user = fromRec $ nub $ union (toRec $ keyed @"updated_at" time) (toRec user)
 ```
 
-So `toRec $ keyed @"update_at" time` creates the same `Row` object which has an only one field of:
+`toRec $ keyed @"update_at" time` creates a `Row` object which has only one field:
 
 ```haskell
 { updated_at :: UTCTime }
 ```
 
-And updating and touching can be done at one time as:
+And updating the user and the `updated_at` field can be done easily within the
+same function:
 
 ```haskell
 updateAndTouchUser :: UpdatingUser -> UTCTime -> User -> User
@@ -76,26 +75,25 @@ updateAndTouchUser updating time user =
   fromRec $ nub $ union (toRec $ updating) $ union (toRec $ keyed @"updated_at" time) (toRec user)
 ```
 
-Note that you can defer to `nub` until fully `union`ed to gain a performance benefit.
-
-This function works as:
+This function works as follows:
 
 ```haskell
 > updateAndTouchUser updating time user
 User {id = ID 42, email = "spider@man.com", username = "Spider Man", created_at = 2020-06-16 11:22:11.991147596 UTC, updated_at = 2020-06-16 11:31:35.170029827 UTC}
 ```
 
-Wrapping up what is done here is:
-- Converting a record into its corresponding `Row` representation by the calls of `toRow`
-- Adding, removing or replacing the fields over the `Row` by `union` and `nub`
-- Converting back to a record by `fromRow`
+Note that using `nub` once after a chain of `union`s will be faster than using `nub`
+after every individual `union`.
 
+Wrapping up, we have done the following:
+
+- Converting a record into its corresponding `Row` representation with the `toRow` function
+- Adding, removing or replacing the fields over the `Row` with `union` and `nub`
+- Converting back to a record with `fromRow`
 
 ## Row-polymorphic functions
 
-`create` and `update` functions are generalized in terms of row-polymorphism.
-
-The following is an example:
+The following `create` and `update` functions are generalized in terms of row-polymorphism.
 
 ```haskell
 data ModelBase a =
@@ -125,6 +123,7 @@ create x = do
 
 
 type OfUpdatedAt = '[ '("updated_at", UTCTime) ]
+
 update ::
   ( IsRow a
   , IsRow b
@@ -141,42 +140,59 @@ update updating x = do
   pure y
 ```
 
-- `IsRow` is a constraint which defines `Of` type family and a pair of `toRow` / `fromRow` functions.
-  - `wakame` defineds an instance of `IsRow` for a normal Haskell record with `Generic` instance.
-- `Lacks` constraints not to have a field with the given label.
+- `IsRow` is a constraint which defines the `Of` type family and a pair of
+  `toRow` / `fromRow` functions.
+  - `wakame` defines an instance of `IsRow` for all Haskell records with a `Generic` instance.
+- `Lacks` constrains a row to not have a field with the given label.
 - `Merge` is a combination of `Union` and `Nub`, which do appending and removing respectively.
 
-Using these constraints and functions, row polymorphic functions are available in your application.
+With these constraints and functions, you can easily write row polymorphic
+functions in your application.
 
 These examples are found at [Wakame.Examples.Usage](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Usage.hs).
 
-There are also some other examples available at [Wakame.Examples.Functons](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Functions.hs).
+There are other examples available at [Wakame.Examples.Functons](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Functions.hs).
 
-As for the general idea of row polymorphism, the wikipedia page may help: [Row polymorphism](https://en.wikipedia.org/wiki/Row_polymorphism).
+If you're interested in row polymorphism, the Wikipedia page may help: [Row polymorphism](https://en.wikipedia.org/wiki/Row_polymorphism).
 
 
 ## Underlying data structure
 
-As a `Row` representation, `wakame` uses `NP` aka "N-ary Product", which is a data type come from [sop-core](https://hackage.haskell.org/package/sop-core) liberary.
+`wakame` uses `NP` (a.k.a. "N-ary Product") as the underlying representation of
+`Row`.  `NP` is a data type from the
+[sop-core](https://hackage.haskell.org/package/sop-core) library.
 
-So if any of finer, advanced or application-specific operation is wanted, it is an option to handle `NP` data directly taking advantage of rich set of functions from `sop-core` library.
+So if you need finer control of `Row`, or if you need an advanced or
+application-specific operation, you have the option of using the `NP` data type
+directly, which will allow you to take advantage of the rich set of functions
+from the `sop-core` library.
 
 For more details, see the paper [True Sums Of Products](https://www.andres-loeh.de/TrueSumsOfProducts/).
 
 
 ### Why not `record-sop` ?
 
-[records-sop](https://hackage.haskell.org/package/records-sop) is a library built on top of `sop-core`, which focuses on the representation of a record data type and provides a set of conversion functionality.
+[records-sop](https://hackage.haskell.org/package/records-sop) is a library
+built on top of `sop-core`.  It focuses on the representation of a record data
+type and provides a set of functions for doing conversions.
 
-The difference is that, `records-sop` is based on more general functionalities which also covers non-record data type, while `wakame` is specialized to a record data type only.
+The difference is that `records-sop` is more general, and also covers
+functionality for non-record data types.  `wakame` is specialized for only
+record data types.
 
-Though the representation data types are virtualy the same between `records-sop` and `wakame`, how to convert is different.
+Although the representation data types is virtually the same between
+`records-sop` and `wakame`, how to convert between data types is different.
 
-One of benefits of this doing is the ability to introduce a special conversion rule such as `keyed @"label" value` to / from `Row`.
+One of the benefits of `wakame` is the ability to introduce special conversion rules such as `keyed @"label" value` to / from `Row`.
 
-`wakame` makes a single `keyed` value to correspond to a representation data with one field, and any arbitrary tuple of `keyed` values to multiple fields.
-In this way, we can use a tuple of `keyed` values in place of an anonymous record.
+`wakame` gives you the ability to make a single `keyed` value correspond to the
+representation of a data type with one field, and any arbitrary tuple of
+`keyed` values to a data type with multiple fields.  In this way, you can use a
+tuple of `keyed` values in place of an anonymous record.
 
+## What is wakame?
+
+[Wakame](https://en.wikipedia.org/wiki/Wakame) is a type of edible seaweed, popular in Japan.
 
 ## Contributions
 
