@@ -1,5 +1,7 @@
 # Wakame
 
+[![GitHub CI](https://github.com/kayhide/wakame/workflows/CI/badge.svg)](https://github.com/kayhide/wakame/actions)
+
 hackage? comming soon
 
 `wakame` is a Haskell library to manipulate record fields in a row-polymorphic way.
