@@ -151,11 +151,18 @@ update updating x = do
 With these constraints and functions, you can easily write row polymorphic
 functions in your application.
 
-These examples are found at [Wakame.Examples.Usage](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Usage.hs).
+These examples are found at 
+[Wakame.Examples.Usage](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Usage.hs).
 
-There are other examples available at [Wakame.Examples.Functons](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Functions.hs).
+There are other examples available at 
+[Wakame.Examples.Functons](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/Functions.hs).
 
-If you're interested in row polymorphism, the Wikipedia page may help: [Row polymorphism](https://en.wikipedia.org/wiki/Row_polymorphism).
+If you're interested in row polymorphism, the Wikipedia page may help: 
+[Row polymorphism](https://en.wikipedia.org/wiki/Row_polymorphism).
+
+A direct translation of the functions described in the Wikipedia page is also available at 
+[Wakame.Examples.RowPolymorphism](https://github.com/kayhide/wakame/blob/master/test/examples/Wakame/Examples/RowPolymorphism.hs).
+
 
 
 ## Underlying data structure

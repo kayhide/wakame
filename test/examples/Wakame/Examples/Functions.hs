@@ -3,11 +3,7 @@ module Wakame.Examples.Functions where
 
 import Prelude
 
-import Control.Arrow (first, (***))
-import Data.Kind
-import Data.Proxy
 import GHC.Generics
-import GHC.TypeLits
 import Wakame
 
 
