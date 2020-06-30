@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 634f64cd3c88e2314e8cf7c578e19dbb1210d855b4a78e60e1b565607e23414b
+-- hash: 73bf0613f6e77822a85a95cc1850d4f2546cad347dbf7eaba5ed28d8bd6d04af
 
 name:           wakame
 version:        0.1.0.0
@@ -44,8 +44,8 @@ library
       src
   default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DerivingStrategies DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedLists OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeOperators TypeSynonymInstances ViewPatterns
   build-depends:
-      base
-    , sop-core
+      base >=4.9 && <5.0
+    , sop-core >=0.5 && <0.6
   default-language: Haskell2010
 
 test-suite wakame-doctest
@@ -58,9 +58,9 @@ test-suite wakame-doctest
   default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DerivingStrategies DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedLists OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
-    , doctest
-    , sop-core
+      base >=4.9 && <5.0
+    , doctest >=0.16 && <1.0
+    , sop-core >=0.5 && <0.6
     , wakame
   default-language: Haskell2010
 
@@ -77,10 +77,10 @@ test-suite wakame-examples
   default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DerivingStrategies DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedLists OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base
-    , sop-core
-    , text
-    , time
+      base >=4.9 && <5.0
+    , sop-core >=0.5 && <0.6
+    , text >=1.2 && <2.0
+    , time >=1.9 && <2.0
     , wakame
   default-language: Haskell2010
 
@@ -96,12 +96,12 @@ test-suite wakame-tasty
   default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DerivingStrategies DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedLists OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeOperators TypeSynonymInstances ViewPatterns
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
-    , base
-    , sop-core
-    , tasty
-    , tasty-discover
-    , tasty-hspec
-    , tasty-quickcheck
+      QuickCheck >=2.13 && <3.0
+    , base >=4.9 && <5.0
+    , sop-core >=0.5 && <0.6
+    , tasty >=1.2 && <2.0
+    , tasty-discover >=4.2 && <5.0
+    , tasty-hspec >=1.1 && <2.0
+    , tasty-quickcheck >=0.10 && <1.0
     , wakame
   default-language: Haskell2010
