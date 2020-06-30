@@ -5,8 +5,7 @@ main = doctest $ ["src", "test/examples"] <> extensions
 
 extensions :: [String]
 extensions =
-  [ "-XAutoDeriveTypeable"
-  , "-XBangPatterns"
+  [ "-XBangPatterns"
   , "-XBinaryLiterals"
   , "-XConstraintKinds"
   , "-XDataKinds"
