@@ -1,8 +1,10 @@
 # Wakame
 
 [![GitHub CI](https://github.com/kayhide/wakame/workflows/CI/badge.svg)](https://github.com/kayhide/wakame/actions)
-
-hackage? comming soon
+[![Hackage](https://img.shields.io/hackage/v/wakame.svg)](https://hackage.haskell.org/package/wakame)
+[![Stackage LTS](http://stackage.org/package/wakame/badge/lts)](http://stackage.org/lts/package/wakame)
+[![Stackage Nightly](http://stackage.org/package/wakame/badge/nightly)](http://stackage.org/nightly/package/wakame)
+![BSD3 license](https://img.shields.io/badge/license-BSD3-blue.svg)
 
 `wakame` is a Haskell library to manipulate record fields in a row-polymorphic way.
 
