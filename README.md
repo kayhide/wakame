@@ -42,7 +42,7 @@ Then, write a function for doing the update:
 
 ```haskell
 updateUser :: UpdatingUser -> User -> User
-updateUser updating user = fromRec $ nub $ union (toRec updating) (toRec user)
+updateUser updating user = fromRec $ nub $ union (toRow updating) (toRow user)
 ```
 
 Here is a working example of using this function:
@@ -61,10 +61,10 @@ this time, let's do it without defining a separate record type:
 
 ```haskell
 touchUser :: UTCTime -> User -> User
-touchUser time user = fromRec $ nub $ union (toRec $ keyed @"updated_at" time) (toRec user)
+touchUser time user = fromRec $ nub $ union (toRow $ keyed @"updated_at" time) (toRow user)
 ```
 
-`toRec $ keyed @"update_at" time` creates a `Row` object which has only one field:
+`toRow $ keyed @"update_at" time` creates a `Row` object which has only one field:
 
 ```haskell
 { updated_at :: UTCTime }
@@ -76,7 +76,7 @@ same function:
 ```haskell
 updateAndTouchUser :: UpdatingUser -> UTCTime -> User -> User
 updateAndTouchUser updating time user =
-  fromRec $ nub $ union (toRec $ updating) $ union (toRec $ keyed @"updated_at" time) (toRec user)
+  fromRec $ nub $ union (toRow $ updating) $ union (toRow $ keyed @"updated_at" time) (toRow user)
 ```
 
 This function works as follows:
